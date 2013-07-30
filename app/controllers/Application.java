@@ -44,11 +44,11 @@ public class Application extends Controller {
 
     //トップページ
     public static Result index() {
-        return ok(index.render());
+        return ok("");
     }  
 
     //印刷
-    public static Result mathprint() {
+    public static Result mathprint(String param) {
         ByteArrayOutputStream result =  new ByteArrayOutputStream();
         try {
             Font fnt1 = new Font(BaseFont.createFont("lib/ipag.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED), 15);
@@ -85,17 +85,10 @@ public class Application extends Controller {
 
             //問題
             List<String> quetionList = new ArrayList<String>();
-            while( quetionList.size() < 20){
-              String quetion = "";
-
-              Random rnd = new Random();
-              int leftInt = rnd.nextInt(9) + 1;
-              int rightInt = rnd.nextInt(9) + 1;
-              quetion = String.format("%d + %d = ", leftInt, rightInt);
-
-              if(!quetionList.contains(quetion)){
-                  quetionList.add(quetion);
-              }
+            if("p1".equals(param)){
+                quetionList = getQuetionList();
+            } else if("p2".equals(param)){
+                quetionList = getQuetionList2();
             }
 
             for (int i = 0; i <= quetionList.size() -1 ; i++) {
@@ -147,4 +140,41 @@ public class Application extends Controller {
         return cellPdfPCell;
     }
 
+    private static List<String> getQuetionList()
+    {
+       List<String> quetionList = new ArrayList<String>();
+       while( quetionList.size() < 20){
+            String quetion = "";
+
+            Random rnd = new Random();
+            int leftInt = rnd.nextInt(9) + 1;
+            int rightInt = rnd.nextInt(9) + 1;
+            quetion = String.format("%d + %d = ", leftInt, rightInt);
+
+            if(!quetionList.contains(quetion)){
+                quetionList.add(quetion);
+            }
+        }
+        return quetionList;
+    }
+
+    private static List<String> getQuetionList2()
+    {
+       List<String> quetionList = new ArrayList<String>();
+       while( quetionList.size() < 20){
+            String quetion = "";
+
+            Random rnd = new Random();
+            int leftInt = rnd.nextInt(9) + 1;
+            int rightInt = rnd.nextInt(9) + 1;
+            if(leftInt + rightInt < 10){
+                quetion = String.format("%d + %d = ", leftInt, rightInt);
+
+                if(!quetionList.contains(quetion)){
+                    quetionList.add(quetion);
+                }
+            }
+        }
+        return quetionList;
+    }
 }
