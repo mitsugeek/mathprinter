@@ -42,13 +42,25 @@ import java.util.*;
 
 public class Application extends Controller {
 
-    //トップページ
-    public static Result index() {
-        return ok("");
-    }  
-
     //印刷
     public static Result mathprint(String param) {
+
+        String titleStr = "";
+        List<String> quetionList = new ArrayList<String>();
+
+        if("p1".equals(param)){
+            titleStr = "足し算(1桁,繰り上がりあり)";
+            quetionList = getQuetionList();
+        } else if("p2".equals(param)){
+            titleStr = "足し算(1桁,繰り上がりなし)";
+            quetionList = getQuetionList2();
+        } else if("p3".equals(param)){
+            titleStr = "引き算(1桁)";
+            quetionList = getQuetionList3();
+        } else {
+            return internalServerError();
+        }
+
         ByteArrayOutputStream result =  new ByteArrayOutputStream();
         try {
             Font fnt1 = new Font(BaseFont.createFont("lib/ipag.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED), 15);
@@ -73,7 +85,8 @@ public class Application extends Controller {
               PdfPTable tblPdfPTable = new PdfPTable(2);
               tblPdfPTable.setWidthPercentage(100);
               tblPdfPTable.setWidths(new float[]{ 50.0f,50.0f});
-              tblPdfPTable.addCell(createCellNonBorder(tblPdfPTable,"足し算プリント", fnt1, BaseColor.WHITE, Element.ALIGN_LEFT,Element.ALIGN_MIDDLE, 3.0f));
+
+              tblPdfPTable.addCell(createCellNonBorder(tblPdfPTable, titleStr, fnt1, BaseColor.WHITE, Element.ALIGN_LEFT,Element.ALIGN_MIDDLE, 3.0f));
               String nameSpace = "名前(                     )";
               tblPdfPTable.addCell(createCellNonBorder(tblPdfPTable,nameSpace, fnt1, BaseColor.WHITE, Element.ALIGN_RIGHT,Element.ALIGN_MIDDLE, 3.0f));
               document.add(tblPdfPTable);
@@ -82,14 +95,6 @@ public class Application extends Controller {
             document.add(breakparag); //改行
             document.add(breakparag); //改行
             document.add(breakparag); //改行
-
-            //問題
-            List<String> quetionList = new ArrayList<String>();
-            if("p1".equals(param)){
-                quetionList = getQuetionList();
-            } else if("p2".equals(param)){
-                quetionList = getQuetionList2();
-            }
 
             for (int i = 0; i <= quetionList.size() -1 ; i++) {
               PdfPTable tblPdfPTable = new PdfPTable(2);
@@ -129,7 +134,7 @@ public class Application extends Controller {
 
     }
 
-
+    //セル生成
     private static PdfPCell createCellNonBorder(PdfPTable tblPdfPTable, String str ,Font fnt, BaseColor color, int horizontalaliment, int VerticalAlignment, float padding){
         PdfPCell cellPdfPCell = new PdfPCell(new Phrase(str,fnt));
         cellPdfPCell.setBackgroundColor(color);
@@ -140,6 +145,7 @@ public class Application extends Controller {
         return cellPdfPCell;
     }
 
+    //足し算の問題（繰り上がり含む)
     private static List<String> getQuetionList()
     {
        List<String> quetionList = new ArrayList<String>();
@@ -158,6 +164,7 @@ public class Application extends Controller {
         return quetionList;
     }
 
+    //足し算の問題（繰り上がりなし）
     private static List<String> getQuetionList2()
     {
        List<String> quetionList = new ArrayList<String>();
@@ -177,4 +184,26 @@ public class Application extends Controller {
         }
         return quetionList;
     }
+
+    private static List<String> getQuetionList3()
+    {
+      List<String> quetionList = new ArrayList<String>();
+      while( quetionList.size() < 20){
+        String quetion = "";
+
+        Random rnd = new Random();
+        int leftInt = rnd.nextInt(9) + 1;
+        int rightInt = rnd.nextInt(9) + 1;
+        if(leftInt - rightInt >= 0){
+          quetion = String.format("%d - %d = ", leftInt, rightInt);
+
+          if(!quetionList.contains(quetion)){
+            quetionList.add(quetion);
+          }
+        }
+      }
+      return quetionList;
+    }
+
+
 }
