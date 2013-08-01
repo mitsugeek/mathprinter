@@ -48,15 +48,21 @@ public class Application extends Controller {
         String titleStr = "";
         List<String> quetionList = new ArrayList<String>();
 
-        if("p1".equals(param)){
+        if("Addition2".equals(param)){
             titleStr = "足し算(1桁,繰り上がりあり)";
             quetionList = getQuetionList();
-        } else if("p2".equals(param)){
+        } else if("Addition1".equals(param)){
             titleStr = "足し算(1桁,繰り上がりなし)";
             quetionList = getQuetionList2();
-        } else if("p3".equals(param)){
+        } else if("Subtraction1".equals(param)){
             titleStr = "引き算(1桁)";
             quetionList = getQuetionList3();
+        } else if("Multiplication1".equals(param)){
+            titleStr = "かけ算";
+            quetionList = getQuetionList4();
+        } else if("Division1".equals(param)){
+            titleStr = "わり算";
+            quetionList = getQuetionList5();
         } else {
             return internalServerError();
         }
@@ -185,6 +191,7 @@ public class Application extends Controller {
         return quetionList;
     }
 
+    //引き算
     private static List<String> getQuetionList3()
     {
       List<String> quetionList = new ArrayList<String>();
@@ -205,5 +212,44 @@ public class Application extends Controller {
       return quetionList;
     }
 
+    //かけ算
+    private static List<String> getQuetionList4()
+    {
+       List<String> quetionList = new ArrayList<String>();
+       while( quetionList.size() < 20){
+            String quetion = "";
+
+            Random rnd = new Random();
+            int leftInt = rnd.nextInt(9) + 1;
+            int rightInt = rnd.nextInt(9) + 1;
+            quetion = String.format("%d × %d = ", leftInt, rightInt);
+
+            if(!quetionList.contains(quetion)){
+                quetionList.add(quetion);
+            }
+        }
+        return quetionList;
+    }
+
+    //割り算
+    private static List<String> getQuetionList5()
+    {
+       List<String> quetionList = new ArrayList<String>();
+       while( quetionList.size() < 20){
+            String quetion = "";
+
+            Random rnd = new Random();
+            int rightInt = rnd.nextInt(5) + 2;
+            int leftInt = rightInt * (rnd.nextInt(5) + 1);
+            if(leftInt > rightInt && ( leftInt % rightInt == 0  )){
+              quetion = String.format("%d ÷ %d = ", leftInt, rightInt);
+
+              if(!quetionList.contains(quetion)){
+                quetionList.add(quetion);
+              }
+            }
+        }
+        return quetionList;
+    }
 
 }
