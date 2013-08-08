@@ -48,20 +48,26 @@ public class Application extends Controller {
         String titleStr = "";
         List<String> quetionList = new ArrayList<String>();
 
-        if("Addition2".equals(param)){
-            titleStr = "足し算(1桁,繰り上がりあり)";
-            quetionList = getQuetionList();
-        } else if("Addition1".equals(param)){
-            titleStr = "足し算(1桁,繰り上がりなし)";
+        if("Addition1".equals(param)){
+            titleStr = "足し算 Lv.1";
             quetionList = getQuetionList2();
+        } else if("Addition2".equals(param)){
+            titleStr = "足し算 Lv.2";
+            quetionList = getQuetionList();
+        } else if("Addition3".equals(param)){
+            titleStr = "足し算 Lv.3";
+            quetionList = getQuetionList2_1();
         } else if("Subtraction1".equals(param)){
-            titleStr = "引き算(1桁)";
+            titleStr = "引き算 Lv.1";
             quetionList = getQuetionList3();
+        } else if("Subtraction2".equals(param)){
+            titleStr = "引き算 Lv.2";
+            quetionList = getQuetionList3_1();
         } else if("Multiplication1".equals(param)){
-            titleStr = "かけ算";
+            titleStr = "かけ算 Lv.1";
             quetionList = getQuetionList4();
         } else if("Division1".equals(param)){
-            titleStr = "わり算";
+            titleStr = "わり算 Lv.1";
             quetionList = getQuetionList5();
         } else {
             return internalServerError();
@@ -77,7 +83,7 @@ public class Application extends Controller {
             document.open();
 
             //pdfの付加情報
-            document.addTitle("算数プリント");
+            document.addTitle("プリント");
             document.addSubject("math printer");
             document.addAuthor("math printer");
             document.addCreator("math printer");
@@ -90,10 +96,10 @@ public class Application extends Controller {
             {
               PdfPTable tblPdfPTable = new PdfPTable(2);
               tblPdfPTable.setWidthPercentage(100);
-              tblPdfPTable.setWidths(new float[]{ 50.0f,50.0f});
+              tblPdfPTable.setWidths(new float[]{ 30.0f,70.0f});
 
               tblPdfPTable.addCell(createCellNonBorder(tblPdfPTable, titleStr, fnt1, BaseColor.WHITE, Element.ALIGN_LEFT,Element.ALIGN_MIDDLE, 3.0f));
-              String nameSpace = "名前(                     )";
+              String nameSpace = " 年   月   日     名前(                     )";
               tblPdfPTable.addCell(createCellNonBorder(tblPdfPTable,nameSpace, fnt1, BaseColor.WHITE, Element.ALIGN_RIGHT,Element.ALIGN_MIDDLE, 3.0f));
               document.add(tblPdfPTable);
             }
@@ -121,7 +127,7 @@ public class Application extends Controller {
             Logger.error("[pdf make Error:DocumentException]",e);
         }
 
-        String FileName = "算数プリント.pdf";
+        String FileName = "プリント.pdf";
 
         try {
             String dFileName = URLEncoder.encode(FileName, "UTF-8");
@@ -191,6 +197,27 @@ public class Application extends Controller {
         return quetionList;
     }
 
+    //足し算（２桁）
+    private static List<String> getQuetionList2_1()
+    {
+       List<String> quetionList = new ArrayList<String>();
+       while( quetionList.size() < 20){
+            String quetion = "";
+
+            Random rnd = new Random();
+            int leftInt = rnd.nextInt(89) + 9;
+            int rightInt = rnd.nextInt(89) + 9;
+            
+            quetion = String.format("%d + %d = ", leftInt, rightInt);
+
+            if(!quetionList.contains(quetion)){
+                quetionList.add(quetion);
+            }
+            
+        }
+        return quetionList;
+    }
+
     //引き算
     private static List<String> getQuetionList3()
     {
@@ -201,6 +228,27 @@ public class Application extends Controller {
         Random rnd = new Random();
         int leftInt = rnd.nextInt(9) + 1;
         int rightInt = rnd.nextInt(9) + 1;
+        if(leftInt - rightInt >= 0){
+          quetion = String.format("%d - %d = ", leftInt, rightInt);
+
+          if(!quetionList.contains(quetion)){
+            quetionList.add(quetion);
+          }
+        }
+      }
+      return quetionList;
+    }
+
+    //引き算2桁
+    private static List<String> getQuetionList3_1()
+    {
+      List<String> quetionList = new ArrayList<String>();
+      while( quetionList.size() < 20){
+        String quetion = "";
+
+        Random rnd = new Random();
+        int leftInt = rnd.nextInt(89) + 9;
+        int rightInt = rnd.nextInt(89) + 9;
         if(leftInt - rightInt >= 0){
           quetion = String.format("%d - %d = ", leftInt, rightInt);
 
